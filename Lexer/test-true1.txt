@@ -1,0 +1,11 @@
+procedure privet;(*dobry vechir*)
+begin
+end; (*****)
+PROGRAM AB2CD; (*^&*$%__£$%^±
+classno
+<>|{{"}}*)
+BEGIN
+END.
+procedure B2ASS(yx:INTEGER;ura,poka:COMPLEX FLOAT;we,are:EXT SIGNAL BLOCKFLOAT);(**)(* ;.: *)
+begin
+end;
