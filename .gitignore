@@ -33,3 +33,6 @@
 
 #Mac support file
 .DS_Store
+
+#Extra files for executable
+*.out.dSYM
