@@ -1,7 +1,9 @@
 {
     "files.associations": {
         "map": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "__tree": "cpp",
+        "__node_handle": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
