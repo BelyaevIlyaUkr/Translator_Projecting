@@ -1,21 +1,15 @@
 #include "Parser.h"
 
 struct node  { 
-    string terminal;
+    map<string,string> terminal;
     string nonTerminal; 
-    struct node *left; 
-    struct node *right; 
+    vector<node*> Nodes;
 }; 
 
 
-struct node* newNode(string terminal,string nonTerminal) {  
-    struct node* node = new struct node*; 
-
-    node->terminal = terminal;
+struct node* newNode(string nonTerminal = "") {  
+    node* node = new struct node; 
     node->nonTerminal = nonTerminal;
-    node->left = NULL; 
-    node->right = NULL; 
-
     return(node); 
 }
 
@@ -25,28 +19,49 @@ void errorProcessing(){
 }
 
 
-void block(){
-
+void statementsList(node*Tree){
+    Tree->Nodes.push_back(newNode("<empty>"));
 }
 
 
-void identifier(){
-
+void block(node*Tree){
+    Tree->Nodes.push_back(newNode("<statements-list>"));
+    statementsList(Tree->Nodes[0]);
 }
 
-void procedureIdentifier(node* tree){
-    node* Tree = newNode(NULL,"<signal-program>");
-    identifier()
+
+void identifier(map<string,string> currentLexeme,node* Tree){
+    Tree->Nodes.push_back(newNode("<identifier>"));
+    (Tree->Nodes[0])->terminal = currentLexeme;
+}
+
+void procedureIdentifier(map<string,string> currentLexeme,node* Tree){
+    Tree->Nodes.push_back(newNode("<procedure-identifier>"));
+    identifier(currentLexeme,Tree->Nodes[0]);
 }
 
 void program(map<string,string> currentLexeme,node* Tree){
     if (currentLexeme["lexCode"] == "401"){
-        procedureIdentifier(readNextLexeme(),Tree->right);
-        if(readNextLexeme() == ";")
-            block();
+
+        procedureIdentifier(readNextLexeme(),Tree);
+
+        currentLexeme = readNextLexeme();
+        if( currentLexeme["lexemValue"] == ";" ) {
+
+            Tree->Nodes.push_back(newNode());
+            (Tree->Nodes[1])->terminal = currentLexeme;
+
+            Tree->Nodes.push_back(newNode("<block>"));
+            block(Tree->Nodes[2]);
+
+            currentLexeme = readNextLexeme();
+            if( currentLexeme["lexemValue"] == "." ) {
+                Tree->Nodes.push_back(newNode());
+                (Tree->Nodes[3])->terminal = currentLexeme;
+            }
+        }
     }
     else if (currentLexeme["lexCode"] == "402")
-        procedureIdentifier(readNextLexeme(),Tree->right);
         if(readNextLexeme() == ";")
             block();
 
@@ -57,10 +72,11 @@ void program(map<string,string> currentLexeme,node* Tree){
 }
 
 node* signalProgram(string lexemes){
-    node* Tree = newNode(NULL,"<signal-program>");
+    node* Tree = newNode("<signal-program>");
+    Tree->Nodes.push_back(newNode("<program>"));
 
     auto firstLexeme = readNextLexeme(lexemes);
-    Tree = program(firstLexeme,Tree->right);
+    program(firstLexeme,Tree->Nodes[0]);
 
     return Tree;
 }
@@ -98,5 +114,5 @@ map<string,string>* readNextLexeme(string lexemesInit = NULL){
 
 
 void Parser(string lexemes,map<string,int>* Identifiers){
-    node* Tree = signalProgram(readNextLexeme(lexemes));
+    node* Tree = signalProgram(lexemes);
 }
