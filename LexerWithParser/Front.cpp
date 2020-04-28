@@ -86,3 +86,20 @@ void Reserved_Words_out(map<string,int>* Reserved_Words){
         cout << it->first << " " << it->second << "\n";
     }
 }
+
+void printTree(node*Tree,int dotNumber = 0){
+    if (Tree == NULL)
+        return
+
+    for(int i = 0; i<dotNumber; i++)
+        cout<<".";
+
+    if (nonTerminal != "")
+        cout<<Tree->nonTerminal<<"\n";
+    else {
+        cout<<Tree->terminal["lexCode"]<<" "<<Tree->terminal["lexemValue"]<<"\n";
+    }
+
+    for(int i = 0; i<Nodes.size(); i++)
+        printTree(Tree->Nodes[i],dotNumber+2);
+}

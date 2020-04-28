@@ -1,4 +1,6 @@
 #include "Parser.h"
+#include "Front.h"
+
 
 struct node  { 
     map<string,string> terminal;
@@ -21,9 +23,7 @@ void errorProcessing(map<string,string> currentLexeme,int error_type,string expe
 }
 
 
-void statementsList(node*Tree){
-
-    map<string,string> currentLexeme = readNextLexeme();
+void statementsList(node*Tree,map<string,string> currentLexeme){
 
     if (currentLexeme["lexCode"] == "403") {
         Tree->Nodes.push_back(newNode());
@@ -48,9 +48,9 @@ void statementsList(node*Tree){
 }
 
 
-void block(node*Tree){
+void block(node*Tree,map<string,string> currentLexeme){
     Tree->Nodes.push_back(newNode("<statements-list>"));
-    statementsList(Tree->Nodes[0]);
+    statementsList(Tree->Nodes[0],currentLexeme);
 }
 
 
@@ -75,19 +75,31 @@ void program(map<string,string> currentLexeme,node* Tree,map<string,int>* Identi
         procedureIdentifier(readNextLexeme(),Tree,Identifiers);
 
         currentLexeme = readNextLexeme();
-        if( currentLexeme["lexemValue"] == ";" ) {
+        if( currentLexeme["lexCode"] == "46" ) {
 
             Tree->Nodes.push_back(newNode());
             (Tree->Nodes[1])->terminal = currentLexeme;
 
-            Tree->Nodes.push_back(newNode("<block>"));
-            block(Tree->Nodes[2]);
-
-            if( currentLexeme["lexemValue"] == "." ) {
-                Tree->Nodes.push_back(newNode());
-                (Tree->Nodes[3])->terminal = currentLexeme;
-            }
+            currentLexeme = readNextLexeme();
         }
+        else
+            errorProcessing(currentLexeme,7,";");
+
+        Tree->Nodes.push_back(newNode("<block>"));
+        block(Tree->Nodes[2],currentLexeme);
+
+        if( currentLexeme["lexCode"] == "59" ) {
+            Tree->Nodes.push_back(newNode());
+            (Tree->Nodes[3])->terminal = currentLexeme;
+
+            currentLexeme = readNextLexeme();
+        }
+        else
+            errorProcessing(currentLexeme,7,".");
+        
+        if (currentLexeme != NULL)
+            errorProcessing(currentLexeme,5,"");
+        
     }
     else if (currentLexeme["lexCode"] == "402")
         if(readNextLexeme() == ";")
@@ -135,6 +147,8 @@ map<string,string>* readNextLexeme(string lexemesInit = NULL){
             case 3:
                 nextLexeme.insert("lexemValue",strTmp);
         }
+
+        scannerPosition++;
     }
 
     return nextLexeme
@@ -142,6 +156,6 @@ map<string,string>* readNextLexeme(string lexemesInit = NULL){
 
 
 void Parser(string lexemes,map<string,int> Identifiers){
-    ostringstream errorMessages;
     node* Tree = signalProgram(lexemes,&Identifiers);
+    printTree(Tree);
 }
