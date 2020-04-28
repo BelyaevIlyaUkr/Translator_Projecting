@@ -15,7 +15,7 @@ int main() {
 
     string lexemes = Lexer(f,&Attributes,&Reserved_Words,&Identifiers);
 
-    string syntax_tree = Parser(lexemes,,&Identifiers)
+    string syntax_tree = Parser(lexemes,Identifiers);
 
     fclose(f);
 }

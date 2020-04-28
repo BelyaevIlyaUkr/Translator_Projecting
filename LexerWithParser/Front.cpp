@@ -18,7 +18,30 @@ void error_collect(ostringstream* errorMessages,int error_type,int current_row,i
             *errorMessages << "Lexer:Error:(line:"<<current_row<< ",column:"
             << current_column << "):Illegal digits using" <<"\n\n";
     }
+}
 
+
+void error_collect(ostringstream* errorMessages,int error_type,map<string,string> currentLexeme,string expectedLexeme=""){
+    if (error_type == 4){
+            *errorMessages << "Parser:Error:(line:"<<currentLexeme["primary_lexem_row"]<< ",column:"
+            <<currentLexeme["primary_lexem_column"]<< "):Keyword "<<expectedLexeme<<" here expected but "
+            <<currentLexeme["lexemValue"]<< " found" <<"\n\n";
+    }
+    else if (error_type == 5){
+            *errorMessages << "Parser:Error:(line:"<<currentLexeme["primary_lexem_row"]<< ",column:"
+            << currentLexeme["primary_lexem_column"] << "): Absence of lexemes here expected but "
+            << currentLexeme["lexemValue"]<<" found " <<"\n\n";
+    }
+    else if (error_type == 6){
+            *errorMessages << "Parser:Error:(line:"<<currentLexeme["primary_lexem_row"]<< ",column:"
+            <<currentLexeme["primary_lexem_column"]<< "): Identifier lexem expected but "
+            <<currentLexeme["lexemValue"]<<" found.\n\n";
+    }
+    else if (error_type == 7){
+            *errorMessages << "Parser:Error:(line:"<<currentLexeme["primary_lexem_row"]<< ",column:"
+            << currentLexeme["primary_lexem_column"] << "): Symbol "<<expectedLexeme<< "here expected but "
+            <<currentLexeme["lexemValue"]<<" found"<<"\n\n";
+    }
 }
 
 
