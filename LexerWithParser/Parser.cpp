@@ -18,29 +18,34 @@ void errorProcessing(bool printErrors,map<string,string> currentLexeme={},int er
 }
 
 
-void statementsList(node*Tree,map<string,string> currentLexeme){
+bool statementsList(node*Tree,map<string,string> currentLexeme){
     if(currentLexeme["lexCode"] == "404") {
-            Tree->Nodes.push_back(newNode("<empty>"));
+         Tree->Nodes.push_back(newNode("<empty>"));
+         return true;
     }
     else{
         errorProcessing(false,currentLexeme,5);
+        return false;
     }
     
 }
 
 
-void block(node*Tree,map<string,string> currentLexeme){
+bool block(node*Tree,map<string,string> currentLexeme){
      if (currentLexeme["lexCode"] == "403") {
         Tree->Nodes.push_back(newNode());
         (Tree->Nodes[0])->terminal = currentLexeme;
     }
-    else
+    else{
         errorProcessing(false,currentLexeme,4,"BEGIN");
+        return false;
+    }
 
 
     currentLexeme = readNextLexeme();
     Tree->Nodes.push_back(newNode("<statements-list>"));
-    statementsList(Tree->Nodes[Tree->Nodes.size()-1],currentLexeme);
+    if (!statementsList(Tree->Nodes[Tree->Nodes.size()-1],currentLexeme))
+        return false;
 
 
     if((Tree->Nodes[Tree->Nodes.size()-1])->Nodes.size() != 0){
@@ -49,25 +54,31 @@ void block(node*Tree,map<string,string> currentLexeme){
     }
     else {
         errorProcessing(false,currentLexeme,4,"END");
+        return false;
     }
+
+
+    return true;
 }
 
 
-void identifier(map<string,string> currentLexeme,node* Tree,map<string,int>* Identifiers){
+bool identifier(map<string,string> currentLexeme,node* Tree,map<string,int>* Identifiers){
     Tree->Nodes.push_back(newNode("<identifier>"));
     auto itr = Identifiers->find(currentLexeme["lexemValue"]);
     if( itr == Identifiers->end() ) {
         errorProcessing(false,currentLexeme,6);
+        return false;
     }
     else{
         (Tree->Nodes[0])->Nodes.push_back(newNode());
         ((Tree->Nodes[0])->Nodes[0])->terminal = currentLexeme;
+        return true;
     }
 }
 
-void procedureIdentifier(map<string,string> currentLexeme,node* Tree,map<string,int>* Identifiers){
+bool procedureIdentifier(map<string,string> currentLexeme,node* Tree,map<string,int>* Identifiers){
     Tree->Nodes.push_back(newNode("<procedure-identifier>"));
-    identifier(currentLexeme,Tree->Nodes[Tree->Nodes.size()-1],Identifiers);
+    return identifier(currentLexeme,Tree->Nodes[Tree->Nodes.size()-1],Identifiers);
 }
 
 void program(map<string,string> currentLexeme,node* Tree,map<string,int>* Identifiers){
@@ -76,7 +87,9 @@ void program(map<string,string> currentLexeme,node* Tree,map<string,int>* Identi
         Tree->Nodes.push_back(newNode());
         (Tree->Nodes[Tree->Nodes.size()-1])->terminal = currentLexeme;
 
-        procedureIdentifier(readNextLexeme(),Tree,Identifiers);
+        if (!procedureIdentifier(readNextLexeme(),Tree,Identifiers)){
+            return;
+        }
 
         currentLexeme = readNextLexeme();
         if( currentLexeme["lexCode"] == "59" ) {
@@ -84,20 +97,25 @@ void program(map<string,string> currentLexeme,node* Tree,map<string,int>* Identi
             Tree->Nodes.push_back(newNode());
             (Tree->Nodes[Tree->Nodes.size()-1])->terminal = currentLexeme;
         }
-        else
+        else{
             errorProcessing(false,currentLexeme,7,";");
+            return;
+        }
 
         currentLexeme = readNextLexeme();
         Tree->Nodes.push_back(newNode("<block>"));
-        block(Tree->Nodes[Tree->Nodes.size()-1],currentLexeme);
+        if (!block(Tree->Nodes[Tree->Nodes.size()-1],currentLexeme))
+            return;
 
         currentLexeme = readNextLexeme();
         if( currentLexeme["lexCode"] == "46" ) {
             Tree->Nodes.push_back(newNode());
             (Tree->Nodes[Tree->Nodes.size()-1])->terminal = currentLexeme;
         }
-        else
+        else{
             errorProcessing(false,currentLexeme,7,".");
+            return;
+        }
         
         currentLexeme = readNextLexeme();
         if (currentLexeme.size() != 0)

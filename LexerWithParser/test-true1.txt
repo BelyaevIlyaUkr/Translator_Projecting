@@ -1,4 +1,4 @@
-PROGRAM ; (*^&*$%__£$%^±
+PROGRAM ABCD; (*^&*$%__£$%^±
 classno
 <>|{{"}}*)
 BEGIN
