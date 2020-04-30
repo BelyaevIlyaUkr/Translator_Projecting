@@ -1,3 +1,9 @@
+#pragma once
+#ifndef _LEXER_H
+#define _LEXER_H
+
+#include "Parser.h"
+#include "Front.h"
 #include <iostream>
 #include <map>
 #include <string>
@@ -15,3 +21,5 @@ int searchIdentifier(string Ident,map<string,int>* Identifiers);
 int AddToIdentifierTable(string Ident,map<string,int>* Identifiers);
 string Lexer(FILE*f,map<int,int>* Attributes,map<string,int>* Reserved_Words,map<string,
             int>* Identifiers);
+
+#endif

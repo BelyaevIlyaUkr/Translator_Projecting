@@ -11,6 +11,7 @@
           "Main.cpp",
           "Lexer.cpp",
           "Front.cpp",
+          "Parser.cpp",
           "-o",
           "Main.out",
           "--debug"

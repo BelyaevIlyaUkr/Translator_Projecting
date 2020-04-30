@@ -21,7 +21,7 @@ void error_collect(ostringstream* errorMessages,int error_type,int current_row,i
 }
 
 
-void error_collect(ostringstream* errorMessages,int error_type,map<string,string> currentLexeme,string expectedLexeme=""){
+void error_collect(ostringstream* errorMessages,int error_type,map<string,string> currentLexeme,string expectedLexeme){
     if (error_type == 4){
             *errorMessages << "Parser:Error:(line:"<<currentLexeme["primary_lexem_row"]<< ",column:"
             <<currentLexeme["primary_lexem_column"]<< "):Keyword "<<expectedLexeme<<" here expected but "
@@ -87,19 +87,19 @@ void Reserved_Words_out(map<string,int>* Reserved_Words){
     }
 }
 
-void printTree(node*Tree,int dotNumber = 0){
+void printTree(node*Tree,int dotNumber){
     if (Tree == NULL)
-        return
+        return;
 
     for(int i = 0; i<dotNumber; i++)
         cout<<".";
 
-    if (nonTerminal != "")
+    if (Tree->nonTerminal != ""){
         cout<<Tree->nonTerminal<<"\n";
+        for(int i = 0; i<Tree->Nodes.size(); i++)
+            printTree(Tree->Nodes[i],dotNumber+2);
+    }
     else {
         cout<<Tree->terminal["lexCode"]<<" "<<Tree->terminal["lexemValue"]<<"\n";
     }
-
-    for(int i = 0; i<Nodes.size(); i++)
-        printTree(Tree->Nodes[i],dotNumber+2);
 }

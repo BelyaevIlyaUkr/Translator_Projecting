@@ -1,114 +1,108 @@
 #include "Parser.h"
-#include "Front.h"
 
-
-struct node  { 
-    map<string,string> terminal;
-    string nonTerminal; 
-    vector<node*> Nodes;
-}; 
-
-
-struct node* newNode(string nonTerminal = "") {  
+struct node* newNode(string nonTerminal) {  
     node* node = new struct node; 
     node->nonTerminal = nonTerminal;
     return(node); 
 }
 
 
-void errorProcessing(map<string,string> currentLexeme,int error_type,string expectedLexeme=""){
+void errorProcessing(bool printErrors,map<string,string> currentLexeme={},int error_type=0,string expectedLexeme=""){
     static ostringstream errorMessages;
-    
-    error_collect(&errorMessages,error_type,currentLexeme,expectedLexeme);
+
+    if (printErrors)
+        errors_out(&errorMessages);
+    else
+        error_collect(&errorMessages,error_type,currentLexeme,expectedLexeme);
+
 }
 
 
 void statementsList(node*Tree,map<string,string> currentLexeme){
-
-    if (currentLexeme["lexCode"] == "403") {
-        Tree->Nodes.push_back(newNode());
-        (Tree->Nodes[0])->terminal = currentLexeme;
-    else
-        errorProcessing(currentLexeme,4,"BEGIN");
-
-    currentLexeme = readNextLexeme();
     if(currentLexeme["lexCode"] == "404") {
             Tree->Nodes.push_back(newNode("<empty>"));
-
-            Tree->Nodes.push_back(newNode());
-            (Tree->Nodes[1])->terminal = currentLexeme;
-
-            currentLexeme = readNextLexeme();
     }
     else{
-        errorProcessing(currentLexeme,5,"");
-        errorProcessing(currentLexeme,4,"END");
+        errorProcessing(false,currentLexeme,5);
+        errorProcessing(false,currentLexeme,4,"END");
     }
     
 }
 
 
 void block(node*Tree,map<string,string> currentLexeme){
+     if (currentLexeme["lexCode"] == "403") {
+        Tree->Nodes.push_back(newNode());
+        (Tree->Nodes[0])->terminal = currentLexeme;
+    }
+    else
+        errorProcessing(false,currentLexeme,4,"BEGIN");
+
+
+    currentLexeme = readNextLexeme();
     Tree->Nodes.push_back(newNode("<statements-list>"));
-    statementsList(Tree->Nodes[0],currentLexeme);
+    statementsList(Tree->Nodes[1],currentLexeme);
+
+
+    if((Tree->Nodes[1])->Nodes.size() != 0){
+        Tree->Nodes.push_back(newNode());
+        (Tree->Nodes[2])->terminal = currentLexeme;
+    }
 }
 
 
 void identifier(map<string,string> currentLexeme,node* Tree,map<string,int>* Identifiers){
     Tree->Nodes.push_back(newNode("<identifier>"));
-    auto itr = Identifiers->find(currentLexeme);
+    auto itr = Identifiers->find(currentLexeme["lexemValue"]);
     if( itr == Identifiers->end() ) {
-        errorProcessing(currentLexeme,6,"");
+        errorProcessing(false,currentLexeme,6);
     }
-    else
-        (Tree->Nodes[0])->terminal = currentLexeme;
+    else{
+        (Tree->Nodes[0])->Nodes.push_back(newNode());
+        ((Tree->Nodes[0])->Nodes[0])->terminal = currentLexeme;
+    }
 }
 
 void procedureIdentifier(map<string,string> currentLexeme,node* Tree,map<string,int>* Identifiers){
     Tree->Nodes.push_back(newNode("<procedure-identifier>"));
-    identifier(currentLexeme,Tree->Nodes[0],Identifiers);
+    identifier(currentLexeme,Tree->Nodes[1],Identifiers);
 }
 
 void program(map<string,string> currentLexeme,node* Tree,map<string,int>* Identifiers){
     if (currentLexeme["lexCode"] == "401"){
 
+        Tree->Nodes.push_back(newNode());
+        (Tree->Nodes[0])->terminal = currentLexeme;
+
         procedureIdentifier(readNextLexeme(),Tree,Identifiers);
 
         currentLexeme = readNextLexeme();
-        if( currentLexeme["lexCode"] == "46" ) {
-
-            Tree->Nodes.push_back(newNode());
-            (Tree->Nodes[1])->terminal = currentLexeme;
-
-            currentLexeme = readNextLexeme();
-        }
-        else
-            errorProcessing(currentLexeme,7,";");
-
-        Tree->Nodes.push_back(newNode("<block>"));
-        block(Tree->Nodes[2],currentLexeme);
-
         if( currentLexeme["lexCode"] == "59" ) {
-            Tree->Nodes.push_back(newNode());
-            (Tree->Nodes[3])->terminal = currentLexeme;
 
-            currentLexeme = readNextLexeme();
+            Tree->Nodes.push_back(newNode());
+            (Tree->Nodes[2])->terminal = currentLexeme;
         }
         else
-            errorProcessing(currentLexeme,7,".");
-        
-        if (currentLexeme != NULL)
-            errorProcessing(currentLexeme,5,"");
-        
-    }
-    else if (currentLexeme["lexCode"] == "402")
-        if(readNextLexeme() == ";")
-            block();
+            errorProcessing(false,currentLexeme,7,";");
 
-    else {
-        errorProcessing();
+        currentLexeme = readNextLexeme();
+        Tree->Nodes.push_back(newNode("<block>"));
+        block(Tree->Nodes[3],currentLexeme);
+
+        currentLexeme = readNextLexeme();
+        if( currentLexeme["lexCode"] == "46" ) {
+            Tree->Nodes.push_back(newNode());
+            (Tree->Nodes[4])->terminal = currentLexeme;
+        }
+        else
+            errorProcessing(false,currentLexeme,7,".");
+        
+        currentLexeme = readNextLexeme();
+        if (currentLexeme.size() != 0)
+            errorProcessing(false,currentLexeme,5);
+        
     }
-    block()
+    else if (currentLexeme["lexCode"] == "402"){}
 }
 
 node* signalProgram(string lexemes,map<string,int>* Identifiers){
@@ -121,41 +115,49 @@ node* signalProgram(string lexemes,map<string,int>* Identifiers){
     return Tree;
 }
 
-map<string,string>* readNextLexeme(string lexemesInit = NULL){
+map<string,string> readNextLexeme(string lexemesInit){
     static string lexemes;
 
-    if (lexemesInit != NULL)
+    if (lexemesInit != "")
         lexemes = lexemesInit;
    
     map<string,string> nextLexeme;
 
     static int scannerPosition = 0;
 
-    while(lexemes[scannerPosition]!= '\n'){
-        string strTmp= "";
-        while(lexemes[scannerPosition]!= '\n' && lexemes[scannerPosition]!= '\t'){
-            strTmp += lexemes[scannerPosition];
+    while(lexemes[scannerPosition]!= '\n' && lexemes[scannerPosition]!= '\0'){
+        string strTmp="";
+        if (lexemes[scannerPosition] == '\t'){
             scannerPosition++;
         }
+        do{
+            strTmp += lexemes[scannerPosition];
+            scannerPosition++;
+        }while(lexemes[scannerPosition]!= '\n' && lexemes[scannerPosition]!= '\t');
         switch(nextLexeme.size()) {
             case 0:
-                nextLexeme.insert("primary_lexem_row",strTmp);
+                nextLexeme.insert({"primary_lexem_row",strTmp});
+                break;
             case 1:
-                nextLexeme.insert("primary_lexem_column",strTmp);
+                nextLexeme.insert({"primary_lexem_column",strTmp});
+                break;
             case 2:
-                nextLexeme.insert("lexCode",strTmp);
+                nextLexeme.insert({"lexCode",strTmp});
+                break;
             case 3:
-                nextLexeme.insert("lexemValue",strTmp);
+                nextLexeme.insert({"lexemValue",strTmp});
         }
-
-        scannerPosition++;
     }
 
-    return nextLexeme
+    scannerPosition++;
+
+    return nextLexeme;
 }
 
 
-void Parser(string lexemes,map<string,int> Identifiers){
+node* Parser(string lexemes,map<string,int> Identifiers){
     node* Tree = signalProgram(lexemes,&Identifiers);
     printTree(Tree);
+    errorProcessing(true);
+    return Tree;
 }
