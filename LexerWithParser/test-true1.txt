@@ -1,5 +1,6 @@
-PROGRAM AB2CD; (*^&*$%__£$%^±
+PROGRAM ; (*^&*$%__£$%^±
 classno
 <>|{{"}}*)
 BEGIN
+sdfsdf
 END.

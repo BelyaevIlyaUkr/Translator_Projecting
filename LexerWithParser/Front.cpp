@@ -24,7 +24,7 @@ void error_collect(ostringstream* errorMessages,int error_type,int current_row,i
 void error_collect(ostringstream* errorMessages,int error_type,map<string,string> currentLexeme,string expectedLexeme){
     if (error_type == 4){
             *errorMessages << "Parser:Error:(line:"<<currentLexeme["primary_lexem_row"]<< ",column:"
-            <<currentLexeme["primary_lexem_column"]<< "):Keyword "<<expectedLexeme<<" here expected but "
+            <<currentLexeme["primary_lexem_column"]<< "): Keyword "<<expectedLexeme<<" here expected but "
             <<currentLexeme["lexemValue"]<< " found" <<"\n\n";
     }
     else if (error_type == 5){
@@ -39,7 +39,7 @@ void error_collect(ostringstream* errorMessages,int error_type,map<string,string
     }
     else if (error_type == 7){
             *errorMessages << "Parser:Error:(line:"<<currentLexeme["primary_lexem_row"]<< ",column:"
-            << currentLexeme["primary_lexem_column"] << "): Symbol "<<expectedLexeme<< "here expected but "
+            << currentLexeme["primary_lexem_column"] << "): Symbol  "<<expectedLexeme<< "  here expected but "
             <<currentLexeme["lexemValue"]<<" found"<<"\n\n";
     }
 }

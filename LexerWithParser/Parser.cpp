@@ -24,7 +24,6 @@ void statementsList(node*Tree,map<string,string> currentLexeme){
     }
     else{
         errorProcessing(false,currentLexeme,5);
-        errorProcessing(false,currentLexeme,4,"END");
     }
     
 }
@@ -41,12 +40,15 @@ void block(node*Tree,map<string,string> currentLexeme){
 
     currentLexeme = readNextLexeme();
     Tree->Nodes.push_back(newNode("<statements-list>"));
-    statementsList(Tree->Nodes[1],currentLexeme);
+    statementsList(Tree->Nodes[Tree->Nodes.size()-1],currentLexeme);
 
 
-    if((Tree->Nodes[1])->Nodes.size() != 0){
+    if((Tree->Nodes[Tree->Nodes.size()-1])->Nodes.size() != 0){
         Tree->Nodes.push_back(newNode());
-        (Tree->Nodes[2])->terminal = currentLexeme;
+        (Tree->Nodes[Tree->Nodes.size()-1])->terminal = currentLexeme;
+    }
+    else {
+        errorProcessing(false,currentLexeme,4,"END");
     }
 }
 
@@ -65,14 +67,14 @@ void identifier(map<string,string> currentLexeme,node* Tree,map<string,int>* Ide
 
 void procedureIdentifier(map<string,string> currentLexeme,node* Tree,map<string,int>* Identifiers){
     Tree->Nodes.push_back(newNode("<procedure-identifier>"));
-    identifier(currentLexeme,Tree->Nodes[1],Identifiers);
+    identifier(currentLexeme,Tree->Nodes[Tree->Nodes.size()-1],Identifiers);
 }
 
 void program(map<string,string> currentLexeme,node* Tree,map<string,int>* Identifiers){
     if (currentLexeme["lexCode"] == "401"){
 
         Tree->Nodes.push_back(newNode());
-        (Tree->Nodes[0])->terminal = currentLexeme;
+        (Tree->Nodes[Tree->Nodes.size()-1])->terminal = currentLexeme;
 
         procedureIdentifier(readNextLexeme(),Tree,Identifiers);
 
@@ -80,19 +82,19 @@ void program(map<string,string> currentLexeme,node* Tree,map<string,int>* Identi
         if( currentLexeme["lexCode"] == "59" ) {
 
             Tree->Nodes.push_back(newNode());
-            (Tree->Nodes[2])->terminal = currentLexeme;
+            (Tree->Nodes[Tree->Nodes.size()-1])->terminal = currentLexeme;
         }
         else
             errorProcessing(false,currentLexeme,7,";");
 
         currentLexeme = readNextLexeme();
         Tree->Nodes.push_back(newNode("<block>"));
-        block(Tree->Nodes[3],currentLexeme);
+        block(Tree->Nodes[Tree->Nodes.size()-1],currentLexeme);
 
         currentLexeme = readNextLexeme();
         if( currentLexeme["lexCode"] == "46" ) {
             Tree->Nodes.push_back(newNode());
-            (Tree->Nodes[4])->terminal = currentLexeme;
+            (Tree->Nodes[Tree->Nodes.size()-1])->terminal = currentLexeme;
         }
         else
             errorProcessing(false,currentLexeme,7,".");
@@ -110,7 +112,7 @@ node* signalProgram(string lexemes,map<string,int>* Identifiers){
     Tree->Nodes.push_back(newNode("<program>"));
 
     auto firstLexeme = readNextLexeme(lexemes);
-    program(firstLexeme,Tree->Nodes[0],Identifiers);
+    program(firstLexeme,Tree->Nodes[Tree->Nodes.size()-1],Identifiers);
 
     return Tree;
 }
