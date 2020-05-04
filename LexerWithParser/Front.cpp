@@ -42,6 +42,11 @@ void error_collect(ostringstream* errorMessages,int error_type,map<string,string
             << currentLexeme["primary_lexem_column"] << "): Symbol  "<<expectedLexeme<< "  here expected but "
             <<currentLexeme["lexemValue"]<<" found"<<"\n\n";
     }
+    else if (error_type == 8){
+            *errorMessages << "Parser:Error:(line:"<<currentLexeme["primary_lexem_row"]<< ",column:"
+            <<currentLexeme["primary_lexem_column"]<< "): Attribute lexem expected but "
+            <<currentLexeme["lexemValue"]<<" found.\n\n";
+    }    
 }
 
 
@@ -101,5 +106,7 @@ void printTree(node*Tree,int dotNumber){
     }
     else {
         cout<<Tree->terminal["lexCode"]<<" "<<Tree->terminal["lexemValue"]<<"\n";
+        for(int i = 0; i<Tree->Nodes.size(); i++)
+            printTree(Tree->Nodes[i],dotNumber+2);
     }
 }

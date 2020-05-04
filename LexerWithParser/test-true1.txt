@@ -1,6 +1,3 @@
-PROGRAM ABCD; (*^&*$%__£$%^±
-classno
-<>|{{"}}*)
+PROCEDURE ABCD(AB,CD:FLOAT;EF,KT:INTEGER;);
 BEGIN
-sdfsdf
 END.

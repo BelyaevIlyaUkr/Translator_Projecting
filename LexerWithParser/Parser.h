@@ -25,6 +25,14 @@ bool procedureIdentifier(map<string,string> currentLexeme,node* Tree,map<string,
 bool identifier(map<string,string> currentLexeme,node* Tree,map<string,int>* Identifiers);
 bool block(node*Tree,map<string,string> currentLexeme);
 bool statementsList(node*Tree,map<string,string> currentLexeme);
-void errorProcessing(map<string,string> currentLexeme,int error_type,string expectedLexeme);
+void errorProcessing(bool printErrors,map<string,string> currentLexeme,int error_type,string expectedLexeme);
+bool variableIdentifier(node*Tree,map<string,string>currentLexeme,map<string,int>*Identifiers);
+bool identifiersList(node*Tree,map<string,string>& currentLexeme,map<string,int>* Identifiers);
+bool attribute(node*Tree,map<string,string>* currentLexeme);
+bool attributesList(node*Tree,map<string,string>* currentLexeme);
+bool parametersList(node*Tree,map<string,string> currentLexeme,map<string,int>* Identifiers);
+bool declaration(node*Tree,map<string,string> currentLexeme,map<string,int>* Identifiers);
+bool declarationsList(node*Tree,map<string,string>* currentLexeme,map<string,int>* Identifiers);
+
 
 #endif
