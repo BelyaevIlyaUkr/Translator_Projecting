@@ -28,9 +28,8 @@ void error_collect(ostringstream* errorMessages,int error_type,map<string,string
             <<currentLexeme["lexemValue"]<< " found" <<"\n\n";
     }
     else if (error_type == 5){
-            *errorMessages << "Parser:Error:(line:"<<currentLexeme["primary_lexem_row"]<< ",column:"
-            << currentLexeme["primary_lexem_column"] << "): Absence of lexemes here expected but "
-            << currentLexeme["lexemValue"]<<" found " <<"\n\n";
+            *errorMessages << "Parser:Error: Absence of any lexemes after the end of signal program expected but "<<
+            currentLexeme["lexemValue"]<<" found " <<"\n\n";
     }
     else if (error_type == 6){
             *errorMessages << "Parser:Error:(line:"<<currentLexeme["primary_lexem_row"]<< ",column:"
@@ -44,9 +43,14 @@ void error_collect(ostringstream* errorMessages,int error_type,map<string,string
     }
     else if (error_type == 8){
             *errorMessages << "Parser:Error:(line:"<<currentLexeme["primary_lexem_row"]<< ",column:"
-            <<currentLexeme["primary_lexem_column"]<< "): Attribute lexem expected but "
+            <<currentLexeme["primary_lexem_column"]<< "): Attribute lexem or ; expected but "
             <<currentLexeme["lexemValue"]<<" found.\n\n";
     }    
+    else if (error_type == 9){
+            *errorMessages << "Parser:Error:(line:"<<currentLexeme["primary_lexem_row"]<< ",column:"
+            <<currentLexeme["primary_lexem_column"]<< "): Attribute lexem expected but "
+            <<currentLexeme["lexemValue"]<<" found.\n\n";
+    } 
 }
 
 

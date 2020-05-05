@@ -19,10 +19,6 @@ void errorProcessing(bool printErrors,map<string,string> currentLexeme={},int er
 
 
 bool attribute(node*Tree,map<string,string>* currentLexeme){
-    if ((*currentLexeme)["lexCode"] == "59"){
-        return true;
-    }
-   
     Tree->Nodes.push_back(newNode("<attribute>"));
     if((*currentLexeme)["lexCode"] == "405" || (*currentLexeme)["lexCode"] == "406"
     ||(*currentLexeme)["lexCode"] == "407" || (*currentLexeme)["lexCode"] == "408"
@@ -33,20 +29,24 @@ bool attribute(node*Tree,map<string,string>* currentLexeme){
         return true;
     }
     else{
-        errorProcessing(false,*currentLexeme,8);
         return false;
     }
 }
 
 
 bool attributesList(node*Tree,map<string,string>* currentLexeme){
-     if ((*currentLexeme)["lexCode"] == "59"){
+    *currentLexeme = readNextLexeme();
+
+    Tree->Nodes.push_back(newNode("<attributes-list>"));
+    if ((*currentLexeme)["lexCode"] == "59"){     // ;
+        Tree->Nodes[Tree->Nodes.size()-1]->Nodes.push_back(newNode("<empty>")); 
         return true;
     }
-    Tree->Nodes.push_back(newNode("<attributes-list>"));
-    *currentLexeme = readNextLexeme();
-    if(!attribute(Tree->Nodes[Tree->Nodes.size()-1],currentLexeme))
+
+    if(!attribute(Tree->Nodes[Tree->Nodes.size()-1],currentLexeme)){
         return false;
+    }
+
     return attributesList(Tree->Nodes[Tree->Nodes.size()-1],currentLexeme);
 }
 
@@ -67,7 +67,7 @@ bool identifiersList(node*Tree,map<string,string>& currentLexeme,map<string,int>
         return true;
     }
     else{
-        errorProcessing(false,currentLexeme,7," , or : ");
+        errorProcessing(false,currentLexeme,7,", or : ");
         return false;
     }
 
@@ -102,11 +102,11 @@ bool declaration(node*Tree,map<string,string> currentLexeme,map<string,int>* Ide
 
 
     currentLexeme = readNextLexeme();
-    if(!attribute(Tree->Nodes[0],&currentLexeme) || ((Tree->Nodes[0])->Nodes[Tree->Nodes.size()-1])->nonTerminal == "<empty>"){
-        errorProcessing(false,currentLexeme,8);
+    if(!attribute(Tree->Nodes[0],&currentLexeme)){
+        errorProcessing(false,currentLexeme,9);
         return false;
     }
-    if(!attributesList(Tree->Nodes[0],&currentLexeme)){
+    if(!attributesList(Tree->Nodes[0],&currentLexeme)){ //empty list of attribute(begins from second attribute) are being translated correctly
         errorProcessing(false,currentLexeme,8);
         return false;
     }
@@ -164,7 +164,7 @@ bool statementsList(node*Tree,map<string,string> currentLexeme){
          return true;
     }
     else{
-        errorProcessing(false,currentLexeme,5);
+        errorProcessing(false,currentLexeme,4,"END");
         return false;
     }
     
@@ -172,7 +172,7 @@ bool statementsList(node*Tree,map<string,string> currentLexeme){
 
 
 bool block(node*Tree,map<string,string> currentLexeme){
-     if (currentLexeme["lexCode"] == "403") {
+    if (currentLexeme["lexCode"] == "403") {
         Tree->Nodes.push_back(newNode());
         (Tree->Nodes[0])->terminal = currentLexeme;
     }
