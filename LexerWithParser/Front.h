@@ -20,6 +20,6 @@ void Empty_File_Msg();
 void Attributes_out(map<int,int>* Attributes);
 void Reserved_Words_out(map<string,int>* Reserved_Words);
 void printTree(node*Tree,int dotNumber = 0);
-void error_collect(ostringstream* errorMessages,int error_type,map<string,string> currentLexeme,string expectedLexeme="");
+void error_collect(ostringstream* errorMessages,int error_type,map<string,string> currentLexeme,string expectedLexeme);
 
 #endif

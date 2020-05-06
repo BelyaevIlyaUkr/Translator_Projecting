@@ -22,13 +22,22 @@ void error_collect(ostringstream* errorMessages,int error_type,int current_row,i
 
 
 void error_collect(ostringstream* errorMessages,int error_type,map<string,string> currentLexeme,string expectedLexeme){
+    if (currentLexeme["lexemValue"] == "")
+        currentLexeme["lexemValue"] = "nothing";
+        
+    if (currentLexeme["primary_lexem_row"] ==""){
+        currentLexeme["primary_lexem_row"] = "last";
+        currentLexeme["primary_lexem_column"] = "last + 1";
+    }
+
     if (error_type == 4){
             *errorMessages << "Parser:Error:(line:"<<currentLexeme["primary_lexem_row"]<< ",column:"
             <<currentLexeme["primary_lexem_column"]<< "): Keyword "<<expectedLexeme<<" here expected but "
             <<currentLexeme["lexemValue"]<< " found" <<"\n\n";
     }
     else if (error_type == 5){
-            *errorMessages << "Parser:Error: Absence of any lexemes after the end of signal program expected but "<<
+            *errorMessages << "Parser:Error:(line:"<<currentLexeme["primary_lexem_row"]<< ",column:"
+            <<currentLexeme["primary_lexem_column"]<< "):"<< "Absence of any lexemes after the end of signal program expected but "<<
             currentLexeme["lexemValue"]<<" found " <<"\n\n";
     }
     else if (error_type == 6){
