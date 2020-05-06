@@ -24,8 +24,13 @@ void error_collect(ostringstream* errorMessages,int error_type,int current_row,i
 void error_collect(ostringstream* errorMessages,int error_type,map<string,string> currentLexeme,string expectedLexeme){
     if (currentLexeme["lexemValue"] == "")
         currentLexeme["lexemValue"] = "nothing";
-        
-    if (currentLexeme["primary_lexem_row"] ==""){
+
+    if (error_type == -1){
+        currentLexeme["primary_lexem_row"] = "1";
+        currentLexeme["primary_lexem_column"] = "1";
+        error_type = 4;
+    }
+    else if (currentLexeme["primary_lexem_row"] ==""){
         currentLexeme["primary_lexem_row"] = "last";
         currentLexeme["primary_lexem_column"] = "last + 1";
     }

@@ -30,7 +30,7 @@ bool variableIdentifier(node*Tree,map<string,string>currentLexeme,map<string,int
 bool identifiersList(node*Tree,map<string,string>& currentLexeme,map<string,int>* Identifiers);
 bool attribute(node*Tree,map<string,string>* currentLexeme);
 bool attributesList(node*Tree,map<string,string>* currentLexeme);
-bool parametersList(node*Tree,map<string,string> currentLexeme,map<string,int>* Identifiers);
+bool parametersList(node*Tree,map<string,string>& currentLexeme,map<string,int>* Identifiers);
 bool declaration(node*Tree,map<string,string> currentLexeme,map<string,int>* Identifiers);
 bool declarationsList(node*Tree,map<string,string>* currentLexeme,map<string,int>* Identifiers);
 
