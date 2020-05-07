@@ -8,7 +8,7 @@ int main(int argc,char** argv) {
 
     printf("\33c\e[3J");
 
-    if((f=fopen((string(argv[1])+"input.sig").c_str(),"rt"))==NULL) {
+    if((f=fopen((string(argv[1])+"test.sig").c_str(),"rt"))==NULL) {
         cout << "Can't open file\n";
         exit(1);
     }
