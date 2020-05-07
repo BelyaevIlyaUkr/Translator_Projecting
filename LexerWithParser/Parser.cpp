@@ -7,11 +7,11 @@ struct node* newNode(string nonTerminal) {
 }
 
 
-void errorProcessing(bool printErrors,map<string,string> currentLexeme={},int error_type=0,string expectedLexeme=""){
+void errorProcessing(bool printErrors,FILE*f2,map<string,string> currentLexeme={},int error_type=0,string expectedLexeme=""){
     static ostringstream errorMessages;
 
     if (printErrors)
-        errors_out(&errorMessages);
+        errors_out(&errorMessages,f2);
     else
         error_collect(&errorMessages,error_type,currentLexeme,expectedLexeme);
 
@@ -67,7 +67,7 @@ bool identifiersList(node*Tree,map<string,string>& currentLexeme,map<string,int>
         return true;
     }
     else{
-        errorProcessing(false,currentLexeme,7,", or : ");
+        errorProcessing(false,NULL,currentLexeme,7,", or : ");
         return false;
     }
 
@@ -103,11 +103,11 @@ bool declaration(node*Tree,map<string,string> currentLexeme,map<string,int>* Ide
 
     currentLexeme = readNextLexeme();
     if(!attribute(Tree->Nodes[0],&currentLexeme)){
-        errorProcessing(false,currentLexeme,9);
+        errorProcessing(false,NULL,currentLexeme,9);
         return false;
     }
     if(!attributesList(Tree->Nodes[0],&currentLexeme)){ //empty list of attribute(begins from second attribute) are being translated correctly
-        errorProcessing(false,currentLexeme,8);
+        errorProcessing(false,NULL,currentLexeme,8);
         return false;
     }
     (Tree->Nodes[0])->Nodes.push_back(newNode());
@@ -140,7 +140,7 @@ bool parametersList(node*Tree,map<string,string>& currentLexeme,map<string,int>*
         return true;
     }
     else{
-        errorProcessing(false,currentLexeme,7," ( or ; ");
+        errorProcessing(false,NULL,currentLexeme,7," ( or ; ");
         return false;
     }
 
@@ -154,7 +154,7 @@ bool parametersList(node*Tree,map<string,string>& currentLexeme,map<string,int>*
         (Tree->Nodes[Tree->Nodes.size()-1])->terminal = currentLexeme;
     }
     else{
-        errorProcessing(false,currentLexeme,7,")");
+        errorProcessing(false,NULL,currentLexeme,7,")");
         return false;
     }
 
@@ -168,7 +168,7 @@ bool statementsList(node*Tree,map<string,string> currentLexeme){
          return true;
     }
     else{
-        errorProcessing(false,currentLexeme,4,"END");
+        errorProcessing(false,NULL,currentLexeme,4,"END");
         return false;
     }
     
@@ -181,7 +181,7 @@ bool block(node*Tree,map<string,string> currentLexeme){
         (Tree->Nodes[0])->terminal = currentLexeme;
     }
     else{
-        errorProcessing(false,currentLexeme,4,"BEGIN");
+        errorProcessing(false,NULL,currentLexeme,4,"BEGIN");
         return false;
     }
 
@@ -197,7 +197,7 @@ bool block(node*Tree,map<string,string> currentLexeme){
         (Tree->Nodes[Tree->Nodes.size()-1])->terminal = currentLexeme;
     }
     else {
-        errorProcessing(false,currentLexeme,4,"END");
+        errorProcessing(false,NULL,currentLexeme,4,"END");
         return false;
     }
 
@@ -210,7 +210,7 @@ bool identifier(map<string,string> currentLexeme,node* Tree,map<string,int>* Ide
     Tree->Nodes.push_back(newNode("<identifier>"));
     auto itr = Identifiers->find(currentLexeme["lexemValue"]);
     if( itr == Identifiers->end() ) {
-        errorProcessing(false,currentLexeme,6);
+        errorProcessing(false,NULL,currentLexeme,6);
         return false;
     }
     else{
@@ -244,7 +244,7 @@ void program(map<string,string> currentLexeme,node* Tree,map<string,int>* Identi
             (Tree->Nodes[Tree->Nodes.size()-1])->terminal = currentLexeme;
         }
         else{
-            errorProcessing(false,currentLexeme,7,";");
+            errorProcessing(false,NULL,currentLexeme,7,";");
             return;
         }
 
@@ -259,13 +259,13 @@ void program(map<string,string> currentLexeme,node* Tree,map<string,int>* Identi
             (Tree->Nodes[Tree->Nodes.size()-1])->terminal = currentLexeme;
         }
         else{
-            errorProcessing(false,currentLexeme,7,".");
+            errorProcessing(false,NULL,currentLexeme,7,".");
             return;
         }
         
         currentLexeme = readNextLexeme();
         if (currentLexeme.size() != 0)
-            errorProcessing(false,currentLexeme,5);
+            errorProcessing(false,NULL,currentLexeme,5);
         
     }
     else if (currentLexeme["lexCode"] == "402"){   //PROCEDURE
@@ -288,7 +288,7 @@ void program(map<string,string> currentLexeme,node* Tree,map<string,int>* Identi
         if (currentLexeme["lexCode"] == "41"){   // )
             currentLexeme = readNextLexeme();
             if( currentLexeme["lexCode"] != "59" ) {
-                errorProcessing(false,currentLexeme,7,";");
+                errorProcessing(false,NULL,currentLexeme,7,";");
                 return;
             }
         }
@@ -309,17 +309,17 @@ void program(map<string,string> currentLexeme,node* Tree,map<string,int>* Identi
             (Tree->Nodes[Tree->Nodes.size()-1])->terminal = currentLexeme;
         }
         else{
-            errorProcessing(false,currentLexeme,7,";");
+            errorProcessing(false,NULL,currentLexeme,7,";");
             return;
         }
         
 
         currentLexeme = readNextLexeme();
         if (currentLexeme.size() != 0)
-            errorProcessing(false,currentLexeme,5);
+            errorProcessing(false,NULL,currentLexeme,5);
     }
     else {
-        errorProcessing(false,currentLexeme,-1," PROGRAM or PROCEDURE ");
+        errorProcessing(false,NULL,currentLexeme,-1," PROGRAM or PROCEDURE ");
         return;
     }
 }
@@ -376,9 +376,9 @@ map<string,string> readNextLexeme(string lexemesInit){
 }
 
 
-node* Parser(string lexemes,map<string,int> Identifiers){
+node* Parser(string lexemes,map<string,int> Identifiers,FILE*f2){
     node* Tree = signalProgram(lexemes,&Identifiers);
-    printTree(Tree);
-    errorProcessing(true);
+    printTreeInFile(Tree,f2);
+    errorProcessing(true,f2);
     return Tree;
 }

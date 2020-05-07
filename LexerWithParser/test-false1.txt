@@ -1,9 +1,0 @@
-procedure privet?;
-begin
-end;
-PROGRAM %^$ 1AB2CD;
-BEGIN 3 (*dobry
-END.
-procedure B2ASS(yx:INTEGER;ura,po&^ka:COMPLEX FLOAT;we,are:EXT SIGNAL BLOCKFLOAT);
-begin
-end;

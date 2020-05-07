@@ -1,0 +1,12 @@
+<signal-program>
+..<program>
+....401 PROGRAM
+....<procedure-identifier>
+......<identifier>
+........1001 ABCD
+....59 ;
+....<block>
+......403 BEGIN
+......<statements-list>
+Parser:Error:(line:3,column:1): Keyword END here expected but SDFSDF4543SDGFSDF found
+

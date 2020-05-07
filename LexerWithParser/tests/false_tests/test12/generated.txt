@@ -1,0 +1,15 @@
+<signal-program>
+..<program>
+....401 PROGRAM
+....<procedure-identifier>
+......<identifier>
+........1001 ABCD
+....59 ;
+....<block>
+......403 BEGIN
+......<statements-list>
+........<empty>
+......404 END
+....46 .
+Parser:Error:(line:4,column:1):Absence of any lexemes after the end of signal program expected but SDFSDFSDFSDFSDFSDFEWFWEFE found 
+

@@ -1,0 +1,2 @@
+PROGRAM ABCD;
+END.

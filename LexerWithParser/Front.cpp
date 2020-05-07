@@ -68,8 +68,10 @@ void error_collect(ostringstream* errorMessages,int error_type,map<string,string
 }
 
 
-void errors_out(ostringstream* errorMessages){
-    cout<<errorMessages->str();
+void errors_out(ostringstream* errorMessages,FILE*f2){
+    if (f2 != NULL)
+        fputs((errorMessages->str()).c_str(),f2);
+    else cout << errorMessages->str();
 }
 
 
@@ -127,4 +129,26 @@ void printTree(node*Tree,int dotNumber){
         for(int i = 0; i<Tree->Nodes.size(); i++)
             printTree(Tree->Nodes[i],dotNumber+2);
     }
+}
+
+void printTreeInFile(node*Tree,FILE* f2,int dotNumber){
+    if (Tree == NULL)
+        return;
+
+    char dot = '.';
+    for(int i = 0; i<dotNumber; i++){
+        fputc(dot,f2);
+    }
+
+    string str = "";
+    if (Tree->nonTerminal != ""){
+        str += Tree->nonTerminal + "\n";
+    }
+    else {
+        str += Tree->terminal["lexCode"] + " " + Tree->terminal["lexemValue"] + "\n";
+    }
+    auto cstr = str.c_str();
+    fputs(cstr,f2);
+    for(int i = 0; i<Tree->Nodes.size(); i++)
+        printTreeInFile(Tree->Nodes[i],f2,dotNumber+2);
 }

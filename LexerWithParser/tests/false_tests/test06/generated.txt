@@ -1,0 +1,8 @@
+<signal-program>
+..<program>
+....401 PROGRAM
+....<procedure-identifier>
+......<identifier>
+........1001 ABCD
+Parser:Error:(line:2,column:1): Symbol  ;  here expected but BEGIN found
+

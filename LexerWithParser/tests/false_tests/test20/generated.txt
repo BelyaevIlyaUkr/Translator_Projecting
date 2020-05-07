@@ -1,0 +1,9 @@
+<signal-program>
+..<program>
+....402 PROCEDURE
+....<procedure-identifier>
+......<identifier>
+........1001 ABCD
+....<parameters-list>
+Parser:Error:(line:2,column:1): Symbol   ( or ;   here expected but BEGIN found
+
