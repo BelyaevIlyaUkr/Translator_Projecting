@@ -1,0 +1,13 @@
+<signal-program>
+..<program>
+....401 PROGRAM
+....<procedure-identifier>
+......<identifier>
+........1001 ABCD
+....59 ;
+....<block>
+......403 BEGIN
+......<statements-list>
+........<empty>
+......404 END
+....46 .

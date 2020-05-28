@@ -1,0 +1,19 @@
+<signal-program>
+..<program>
+....402 PROCEDURE
+....<procedure-identifier>
+......<identifier>
+........1001 ABCD
+....<parameters-list>
+......40 (
+......<declarations-list>
+........<declaration>
+..........<variable-identifier>
+............<identifier>
+..............1002 T4H
+..........<identifiers-list>
+............<empty>
+..........58 :
+..........<attribute>
+Parser:Error:(line:1,column:20): Attribute lexem expected but PRIVET found.
+

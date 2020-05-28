@@ -1,0 +1,10 @@
+<signal-program>
+..<program>
+....401 PROGRAM
+....<procedure-identifier>
+......<identifier>
+........1001 ABCD
+....59 ;
+....<block>
+Parser:Error:(line:2,column:1): Keyword BEGIN here expected but END found
+

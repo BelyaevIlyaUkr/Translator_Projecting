@@ -1,0 +1,9 @@
+<signal-program>
+..<program>
+....402 PROCEDURE
+....<procedure-identifier>
+......<identifier>
+........1001 ABCD
+....<parameters-list>
+Parser:Error:(line:1,column:16): Symbol   ( or ;   here expected but T4H found
+
