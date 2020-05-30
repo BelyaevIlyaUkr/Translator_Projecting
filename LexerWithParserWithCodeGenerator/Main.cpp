@@ -18,6 +18,8 @@ int main(int argc,char** argv) {
 
     struct node*syntax_tree = Parser(lexemes,Identifiers,f2);
 
+    Code_Generator(syntax_tree,&Identifiers,f2);
+
     fclose(f2);
     fclose(f);
 }

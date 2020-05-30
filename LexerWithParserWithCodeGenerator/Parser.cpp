@@ -378,7 +378,7 @@ map<string,string> readNextLexeme(string lexemesInit){
 
 node* Parser(string lexemes,map<string,int> Identifiers,FILE*f2){
     node* Tree = signalProgram(lexemes,&Identifiers);
-    printTreeInFile(Tree,f2);
+    //printTreeInFile(Tree,f2);
     errorProcessing(true,f2);
     return Tree;
 }
