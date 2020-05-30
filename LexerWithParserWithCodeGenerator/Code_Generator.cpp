@@ -36,6 +36,7 @@ string tree_travel(node* syntax_tree,<string,int>* Identifiers,int* state){
         if (current_lexeme["lexCode"] == ")"){
             string procedure_name;
             identifier_identity("0",&procedure_name);
+            asm_code = "endp\t" + procedure_name + "\ncode ends\n\tend\t" + procedure_name;
             return asm_code;
         }
         auto itr = Identifiers->find(currentLexeme["lexemValue"]);
@@ -45,7 +46,7 @@ string tree_travel(node* syntax_tree,<string,int>* Identifiers,int* state){
             }
             if (*state == 2){
                 *state = 3; //means that code execution have to be ended
-                return currentLexeme["lexemValue"]+ ":\n"+"code ends\n\tend\t" + currentLexeme["lexemValue"];
+                return currentLexeme["lexemValue"]+ ":\n\tnop\ncode ends\n\tend\t" + currentLexeme["lexemValue"];
             }
             if(*state == 4){
                 *state = 0;
@@ -91,7 +92,7 @@ string tree_travel(node* syntax_tree,<string,int>* Identifiers,int* state){
                     }
                 }
                 if (*state != 1){
-                    asm_code_below = "\tdd,\n";
+                    asm_code_below = "\tdd\n";
                 }
                 else break;
             }
@@ -106,6 +107,5 @@ string tree_travel(node* syntax_tree,<string,int>* Identifiers,int* state){
 void Code_Generator(node* syntax_tree,<string,int>* Identifiers,FILE*f2){
     int state = 0;
     string asm_code = tree_travel(syntax_tree,Identifiers,&state);
-    asm_code = asm_code + "code segment\n\tassume cs:code,ds:data\ncode ends";
     cout << asm_code;
 }
