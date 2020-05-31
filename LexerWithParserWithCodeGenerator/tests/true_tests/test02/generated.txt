@@ -1,79 +1,12 @@
-<signal-program>
-..<program>
-....402 PROCEDURE
-....<procedure-identifier>
-......<identifier>
-........1001 ABCD
-....<parameters-list>
-......40 (
-......<declarations-list>
-........<declaration>
-..........<variable-identifier>
-............<identifier>
-..............1002 G4H
-..........<identifiers-list>
-............<empty>
-..........58 :
-..........<attribute>
-............408 FLOAT
-..........<attributes-list>
-............<attribute>
-..............409 EXT
-............<attributes-list>
-..............<attribute>
-................405 SIGNAL
-..............<attributes-list>
-................<attribute>
-..................406 COMPLEX
-................<attributes-list>
-..................<empty>
-..........59 ;
-........<declarations-list>
-..........<declaration>
-............<variable-identifier>
-..............<identifier>
-................1003 HEL3LO
-............<identifiers-list>
-..............44 ,
-..............<variable-identifier>
-................<identifier>
-..................1004 B5YE
-..............<identifiers-list>
-................44 ,
-................<variable-identifier>
-..................<identifier>
-....................1005 HI
-................<identifiers-list>
-..................<empty>
-............58 :
-............<attribute>
-..............407 INTEGER
-............<attributes-list>
-..............<attribute>
-................410 BLOCKFLOAT
-..............<attributes-list>
-................<empty>
-............59 ;
-..........<declarations-list>
-............<declaration>
-..............<variable-identifier>
-................<identifier>
-..................1006 OPT
-..............<identifiers-list>
-................<empty>
-..............58 :
-..............<attribute>
-................408 FLOAT
-..............<attributes-list>
-................<empty>
-..............59 ;
-............<declarations-list>
-..............<empty>
-......41 )
-....59 ;
-....<block>
-......403 BEGIN
-......<statements-list>
-........<empty>
-......404 END
-....59 ;
+data segment
+data ends
+code segment
+	assume cs:code,ds:data
+proc	ABCD
+G4H	DD
+HEL3LOB5YEHI	DD
+	DD
+OPT	DD
+endp	ABCD
+code ends
+	end	ABCD

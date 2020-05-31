@@ -1,5 +1,6 @@
 #include "Lexer.h"
 #include "Parser.h"
+#include "Code_Generator.h"
 int main(int argc,char** argv) {
     map<int,int> Attributes;
     map<string,int> Reserved_Words;

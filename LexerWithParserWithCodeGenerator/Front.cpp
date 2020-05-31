@@ -152,3 +152,11 @@ void printTreeInFile(node*Tree,FILE* f2,int dotNumber){
     for(int i = 0; i<Tree->Nodes.size(); i++)
         printTreeInFile(Tree->Nodes[i],f2,dotNumber+2);
 }
+
+void printAsmCode(string asm_code){
+    cout << asm_code << endl;
+}
+
+void printAsmCodeInFile(string asm_code,FILE* f2){
+    fputs(asm_code.c_str(),f2);
+}

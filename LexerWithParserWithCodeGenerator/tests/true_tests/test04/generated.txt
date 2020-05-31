@@ -1,15 +1,8 @@
-<signal-program>
-..<program>
-....402 PROCEDURE
-....<procedure-identifier>
-......<identifier>
-........1001 ABCD
-....<parameters-list>
-......<empty>
-....59 ;
-....<block>
-......403 BEGIN
-......<statements-list>
-........<empty>
-......404 END
-....59 ;
+data segment
+data ends
+code segment
+	assume cs:code,ds:data
+proc	ABCD
+endp	ABCD
+code ends
+	end	ABCD

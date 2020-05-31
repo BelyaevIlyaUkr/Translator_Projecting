@@ -22,5 +22,7 @@ void Reserved_Words_out(map<string,int>* Reserved_Words);
 void printTree(node*Tree,int dotNumber = 0);
 void error_collect(ostringstream* errorMessages,int error_type,map<string,string> currentLexeme,string expectedLexeme);
 void printTreeInFile(node*Tree,FILE* f2,int dotNumber = 0);
+void printAsmCode(string asm_code);
+void printAsmCodeInFile(string asm_code,FILE* f2);
 
 #endif

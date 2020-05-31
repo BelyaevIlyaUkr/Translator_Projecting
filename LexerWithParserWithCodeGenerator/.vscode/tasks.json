@@ -12,6 +12,7 @@
           "Lexer.cpp",
           "Front.cpp",
           "Parser.cpp",
+          "Code_Generator.cpp",
           "-o",
           "Main.out",
           "--debug"
