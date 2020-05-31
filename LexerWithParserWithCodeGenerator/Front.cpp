@@ -67,6 +67,33 @@ void error_collect(ostringstream* errorMessages,int error_type,map<string,string
     } 
 }
 
+void error_collect(ostringstream* errorMessages,int error_type,string currentLexemeValue,string lexem_row,string lexem_column,string expectedLexeme){
+    if (error_type == 10){
+        *errorMessages << "\nCode Generator:Error:(line:"<< lexem_row << ",column:"<< lexem_column
+        << "): Identifier "<< currentLexemeValue << "was already used in declaring earlier\n";
+    } 
+    if (error_type == 11){
+        *errorMessages << "\nCode Generator:Error:(line:"<< lexem_row << ",column:"<< lexem_column
+        << "): Extra attribute "<< currentLexemeValue << "is already used in this declaration\n";
+    } 
+    if (error_type == 12){
+        *errorMessages << "\nCode Generator:Error:(line:"<< lexem_row << ",column:"<< lexem_column
+        << "): Attribute "<< currentLexemeValue << ",as an extra attribute,can't take place after base attributes\n";
+    } 
+    if (error_type == 13){
+        *errorMessages << "\nCode Generator:Error:(line:"<< lexem_row << ",column:"<< lexem_column
+        << "): Attribute "<< currentLexemeValue << "can't take place here because two base attributes can't be in one declaration\n";
+    } 
+    if (error_type == 14){
+        *errorMessages << "\nCode Generator:Error:(line:"<< lexem_row << ",column:"<< lexem_column
+        << "): Attribute "<< currentLexemeValue << "can't take place here because it can't be with attribute SIGNAL in one declaration\n";
+    } 
+    if (error_type == 15){
+        *errorMessages << "\nCode Generator:Error:(line:"<< lexem_row << ",column:"<< lexem_column
+        << "): There isn't any base attribute in this declaration\n";
+    } 
+}
+
 
 void errors_out(ostringstream* errorMessages,FILE*f2){
     if (f2 != NULL)
