@@ -1,3 +1,0 @@
-PROCEDURE ABCD(:;);
-BEGIN
-END.

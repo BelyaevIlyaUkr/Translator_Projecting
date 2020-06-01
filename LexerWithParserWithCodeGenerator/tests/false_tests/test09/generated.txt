@@ -1,12 +1,6 @@
-<signal-program>
-..<program>
-....401 PROGRAM
-....<procedure-identifier>
-......<identifier>
-........1001 ABCD
-....59 ;
-....<block>
-......403 BEGIN
-......<statements-list>
-Parser:Error:(line:3,column:1): Keyword END here expected but SDFSDF4543SDGFSDF found
-
+data segment
+data ends
+code segment
+	assume cs:code,ds:data
+proc ABCD
+Code Generator:Error:(line:1,column:39): Attribute FLOAT can't take place here because more than one base attribute can't be in one declaration

@@ -1,14 +1,6 @@
-<signal-program>
-..<program>
-....401 PROGRAM
-....<procedure-identifier>
-......<identifier>
-........1001 ABCD
-....59 ;
-....<block>
-......403 BEGIN
-......<statements-list>
-........<empty>
-......404 END
-Parser:Error:(line:last,column:last + 1): Symbol  .  here expected but nothing found
-
+data segment
+data ends
+code segment
+	assume cs:code,ds:data
+proc ABCD
+Code Generator:Error:(line:1,column:31): Attribute BLOCKFLOAT can't take place here because it can't be with attribute SIGNAL in one declaration

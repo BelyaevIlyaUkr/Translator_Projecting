@@ -24,7 +24,7 @@ void error_collect(ostringstream* errorMessages,int error_type,map<string,string
 void printTreeInFile(node*Tree,FILE* f2,int dotNumber = 0);
 void printAsmCode(string asm_code);
 void printAsmCodeInFile(string asm_code,FILE* f2);
-void error_collect(ostringstream* errorMessages,int error_type,string currentLexemeValue,string lexem_row,string lexem_column,string expectedLexeme="");
+void error_collect(ostringstream* errorMessages,int error_type,string currentLexemeValue,string lexem_row,string lexem_column);
 
 
 #endif

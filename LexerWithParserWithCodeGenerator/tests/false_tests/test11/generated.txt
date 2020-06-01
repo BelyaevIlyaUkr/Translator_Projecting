@@ -1,10 +1,6 @@
-<signal-program>
-..<program>
-....401 PROGRAM
-....<procedure-identifier>
-......<identifier>
-........1001 ABCD
-....59 ;
-....<block>
-Parser:Error:(line:2,column:1): Keyword BEGIN here expected but END found
-
+data segment
+data ends
+code segment
+	assume cs:code,ds:data
+proc ABCD
+Code Generator:Error:(line:1,column:26): Attribute EXT,as an extra attribute,can't take place after base attributes

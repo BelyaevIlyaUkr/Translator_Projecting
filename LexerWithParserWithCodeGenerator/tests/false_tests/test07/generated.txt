@@ -1,7 +1,7 @@
-<signal-program>
-..<program>
-....401 PROGRAM
-....<procedure-identifier>
-......<identifier>
-Parser:Error:(line:1,column:9): Identifier lexem expected but FLOAT found.
-
+data segment
+data ends
+code segment
+	assume cs:code,ds:data
+proc ABCD
+	T4H : DD
+Code Generator:Error:(line:1,column:41): Identifier T4H was already used in declaring earlier

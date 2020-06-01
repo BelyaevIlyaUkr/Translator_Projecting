@@ -1,7 +1,0 @@
-<signal-program>
-..<program>
-....401 PROGRAM
-....<procedure-identifier>
-......<identifier>
-Parser:Error:(line:1,column:8): Identifier lexem expected but ; found.
-

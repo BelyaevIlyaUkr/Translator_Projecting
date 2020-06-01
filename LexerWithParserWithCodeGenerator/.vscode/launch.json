@@ -10,7 +10,7 @@
             "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/Main.out",
-            "args": ["./tests/false_tests/test22/"]
+            "args": ["./tests/true_tests/test05/"]
         }
     ]
 }

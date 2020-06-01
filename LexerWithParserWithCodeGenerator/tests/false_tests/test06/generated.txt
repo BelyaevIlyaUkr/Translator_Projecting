@@ -1,8 +1,6 @@
-<signal-program>
-..<program>
-....401 PROGRAM
-....<procedure-identifier>
-......<identifier>
-........1001 ABCD
-Parser:Error:(line:2,column:1): Symbol  ;  here expected but BEGIN found
-
+data segment
+data ends
+code segment
+	assume cs:code,ds:data
+proc ABCD
+Code Generator:Error:(line:1,column:16): Identifier ABCD was already used in declaring earlier

@@ -2,8 +2,8 @@ data segment
 data ends
 code segment
 	assume cs:code,ds:data
-proc	ABCD
-	AB : DD
-endp	ABCD
+proc ABCD
+	OPT : DD
+endp ABCD
 code ends
-	end	ABCD
+	end ABCD

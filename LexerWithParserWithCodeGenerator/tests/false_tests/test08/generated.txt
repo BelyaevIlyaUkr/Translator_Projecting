@@ -1,4 +1,6 @@
-<signal-program>
-..<program>
-Parser:Error:(line:1,column:1): Keyword  PROGRAM or PROCEDURE  here expected but SIGNAL found
-
+data segment
+data ends
+code segment
+	assume cs:code,ds:data
+proc ABCD
+Code Generator:Error:(line:1,column:28): Extra attribute EXT is already used in this declaration
