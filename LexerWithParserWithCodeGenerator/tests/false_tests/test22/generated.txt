@@ -1,0 +1,9 @@
+data segment
+data ends
+code segment
+	assume cs:code,ds:data
+proc	ABCD
+	AB : DD
+endp	ABCD
+code ends
+	end	ABCD

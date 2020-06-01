@@ -74,7 +74,7 @@ void error_collect(ostringstream* errorMessages,int error_type,string currentLex
     } 
     if (error_type == 11){
         *errorMessages << "\nCode Generator:Error:(line:"<< lexem_row << ",column:"<< lexem_column
-        << "): Extra attribute "<< currentLexemeValue << "is already used in this declaration\n";
+        << "): Extra attribute "<< currentLexemeValue << " is already used in this declaration\n";
     } 
     if (error_type == 12){
         *errorMessages << "\nCode Generator:Error:(line:"<< lexem_row << ",column:"<< lexem_column
@@ -82,11 +82,11 @@ void error_collect(ostringstream* errorMessages,int error_type,string currentLex
     } 
     if (error_type == 13){
         *errorMessages << "\nCode Generator:Error:(line:"<< lexem_row << ",column:"<< lexem_column
-        << "): Attribute "<< currentLexemeValue << "can't take place here because two base attributes can't be in one declaration\n";
+        << "): Attribute "<< currentLexemeValue << " can't take place here because two base attributes can't be in one declaration\n";
     } 
     if (error_type == 14){
         *errorMessages << "\nCode Generator:Error:(line:"<< lexem_row << ",column:"<< lexem_column
-        << "): Attribute "<< currentLexemeValue << "can't take place here because it can't be with attribute SIGNAL in one declaration\n";
+        << "): Attribute "<< currentLexemeValue << " can't take place here because it can't be with attribute SIGNAL in one declaration\n";
     } 
     if (error_type == 15){
         *errorMessages << "\nCode Generator:Error:(line:"<< lexem_row << ",column:"<< lexem_column

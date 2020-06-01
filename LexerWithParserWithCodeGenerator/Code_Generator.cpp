@@ -1,5 +1,75 @@
 #include "Code_Generator.h"
-void errorProcessing(bool printErrors,bool base_absent,bool base_absent_error,string new_lexem_row,string new_lexem_column,FILE*f2=NULL,string currentLexeme="",int error_type=0,string expectedLexeme=""){
+void declaration_attributes_actions(int*state,string asm_code_below,string* asm_code,map<string,int>*Identifiers){
+    static vector<string>declaration_attributes;
+        if (asm_code_below == "EXT" || asm_code_below == "COMPLEX" || asm_code_below == "SIGNAL"){
+            for(int j = 0; j < declaration_attributes.size(); j++){
+                if (declaration_attributes[j] == asm_code_below){
+                    *state = 1;
+                    errorProcessing(false,false,false,"-1","-1",NULL,asm_code_below,11);
+                    break;
+                }
+                if (declaration_attributes[j] == "FLOAT" || declaration_attributes[j] == "BLOCKFLOAT" || declaration_attributes[j] == "INTEGER"){
+                    *state = 1;
+                    errorProcessing(false,false,false,"-1","-1",NULL,asm_code_below,12);
+                    break;
+                }
+            }
+            if (*state == 1)
+                return;
+            else{
+                declaration_attributes.push_back(asm_code_below);
+            }
+        }
+        else if (asm_code_below == "FLOAT" || asm_code_below == "BLOCKFLOAT" || asm_code_below == "INTEGER"){
+            for (int j =0; j < declaration_attributes.size(); j++){
+                if (declaration_attributes[j] == "FLOAT" || declaration_attributes[j] == "BLOCKFLOAT" || declaration_attributes[j] == "INTEGER"){
+                    errorProcessing(false,false,false,"-1","-1",NULL,asm_code_below,13);
+                    *state = 1;
+                    break;
+                }
+                if (declaration_attributes[j] == "SIGNAL" && asm_code_below == "BLOCKFLOAT"){
+                    errorProcessing(false,false,false,"-1","-1",NULL,asm_code_below,14);
+                    *state = 1;
+                    break;
+                }
+            }
+            if (*state != 1){
+                declaration_attributes.push_back(asm_code_below);
+            }
+            else return;
+        }
+        else if (*state == 5){
+            *state = 0;
+            bool base_attribute_absent = true;
+            for(int j = 0; j < declaration_attributes.size(); j++){
+                if (declaration_attributes[j] == "FLOAT" 
+                || declaration_attributes[j] == "BLOCKFLOAT" 
+                || declaration_attributes[j] == "INTEGER"){
+                    base_attribute_absent = false;
+                    break;
+                }
+            }
+            if(base_attribute_absent){
+                errorProcessing(false,false,true,"-1","-1",NULL,asm_code_below,15);
+                *state = 1;
+                return;
+            }
+            declaration_attributes.clear();
+            asm_code_below = "";
+            identifier_identity(NULL,"0",NULL,"DD",&asm_code_below);
+            *asm_code = *asm_code + asm_code_below;
+        }
+        else { //ready returned phrases
+            auto itr = Identifiers->find(asm_code_below);
+            if (itr == Identifiers->end()){
+                *asm_code = *asm_code + asm_code_below;
+            }
+            if (*state == 3 || *state == 1){ //or program identifier was found either there are few equal identifiers
+                return;
+            }
+        }
+}
+void errorProcessing(bool printErrors,bool base_absent,bool base_absent_error,string new_lexem_row,string new_lexem_column,FILE*f2,string currentLexeme,int error_type,string expectedLexeme){
     static ostringstream errorMessages;
 
     static string lexem_column;
@@ -80,17 +150,14 @@ string tree_travel(struct node* syntax_tree,map<string,int>* Identifiers,int* st
             *state = 0;
         }
 
-        if((currentLexeme["lexemValue"] == ":") && (*state != 5)){
+        if((currentLexeme["lexemValue"] == ";") && (*state == 0)){
             *state = 5;
-        }
-        else if ((currentLexeme["lexemValue"] == ";") && (*state == 5)){
-            *state = 0;
         }
 
         if (currentLexeme["lexemValue"] == ")" || (currentLexeme["lexemValue"] == "BEGIN" 
         && *state == 4)){
             string procedure_name;
-            *state = 0;
+            *state = 6;
             identifier_identity(NULL,"0",&procedure_name);
             asm_code = "\nendp\t" + procedure_name + "\ncode ends\n\tend\t" + procedure_name;
         }
@@ -121,77 +188,11 @@ string tree_travel(struct node* syntax_tree,map<string,int>* Identifiers,int* st
         return asm_code;
     }
     else{
-        vector<string>declaration_attributes;
         for(int i = 0; i < syntax_tree->Nodes.size() ; i++){
             asm_code_below = tree_travel(syntax_tree->Nodes[i],Identifiers,state);
-            if (asm_code_below == "EXT" || asm_code_below == "COMPLEX" || asm_code_below == "SIGNAL"){
-                for(int j = 0; j < declaration_attributes.size(); j++){
-                    if (declaration_attributes[j] == asm_code_below){
-                        *state = 1;
-                        errorProcessing(false,false,false,"-1","-1",NULL,asm_code_below,11);
-                        break;
-                    }
-                    //if(i == (declaration_attributes.size() - 1)){
-                        if (declaration_attributes[j] == "FLOAT" || declaration_attributes[j] == "BLOCKFLOAT" || declaration_attributes[j] == "INTEGER"){
-                            *state = 1;
-                            errorProcessing(false,false,false,"-1","-1",NULL,asm_code_below,12);
-                            break;
-                            //TODO error proccessing
-                        }
-                    //}
-                }
-                if (*state == 1)
-                    break;
-                else declaration_attributes.push_back(asm_code_below);
-            }
-            else if (asm_code_below == "FLOAT" || asm_code_below == "BLOCKFLOAT" || asm_code_below == "INTEGER"){
-                for (int j =0; j < declaration_attributes.size(); j++){
-                    if (declaration_attributes[j] == "FLOAT" || declaration_attributes[j] == "BLOCKFLOAT" || declaration_attributes[j] == "INTEGER"){
-                        errorProcessing(false,false,false,"-1","-1",NULL,asm_code_below,13);
-                        *state = 1;
-                        break;
-                        //TODO error processing
-                    }
-                    if (declaration_attributes[j] == "SIGNAL" && asm_code_below == "BLOCKFLOAT"){
-                        errorProcessing(false,false,false,"-1","-1",NULL,asm_code_below,14);
-                        *state = 1;
-                        break;
-                        //TODO error processing
-                    }
-                }
-                if (*state != 1){
-                    declaration_attributes.push_back(asm_code_below);
-                }
-                else break;
-            }
-            else if (*state == 0){
-                bool base_attribute_absent = true;
-                for(int j = 0; j < declaration_attributes.size(); j++){
-                    if (declaration_attributes[j] == "FLOAT" 
-                    || declaration_attributes[j] == "BLOCKFLOAT" 
-                    || declaration_attributes[j] == "INTEGER"){
-                        base_attribute_absent = false;
-                        break;
-                    }
-                }
-                if(base_attribute_absent){
-                    errorProcessing(false,false,true,"-1","-1",NULL,asm_code_below,15);
-                    *state = 1;
-                    break;
-                }
-                declaration_attributes.clear();
-                asm_code_below = "";
-                identifier_identity(NULL,"0",NULL,"DD",&asm_code_below);
-                asm_code = asm_code + asm_code_below;
-            }
-            else { //ready returned phrases
-                auto itr = Identifiers->find(asm_code_below);
-                if (itr == Identifiers->end()){
-                    asm_code = asm_code + asm_code_below;
-                }
-                if (*state == 3 || *state == 1) //or program identifier was found either there are few equal identifiers
-                    break;
-            }
+            declaration_attributes_actions(state,asm_code_below,&asm_code,Identifiers);
+            if (*state == 1 || *state == 3)
+                break; 
         }
         return asm_code;
     }
