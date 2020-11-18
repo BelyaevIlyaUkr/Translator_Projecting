@@ -1,1 +1,1 @@
-# University course of translators projecting basics
+# University course on Translator Projecting Basics
